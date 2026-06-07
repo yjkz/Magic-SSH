@@ -53,5 +53,7 @@ attachTerminalWebSocket({
     console.log(`- ${url}`);
   }
   console.log(`数据目录：${config.dataDir}`);
-  openBrowser(urls[0]);
+  if (config.shouldOpenBrowser) {
+    openBrowser(urls[0]);
+  }
 }

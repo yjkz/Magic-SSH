@@ -1,0 +1,16 @@
+services:
+  magic-ssh:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: magic-ssh:local
+    container_name: magic-ssh
+    ports:
+      - "8766:8766"
+    volumes:
+      - ./data:/app/data
+    environment:
+      LISTEN_HOST: 0.0.0.0
+      PORT: "8766"
+      DISABLE_OPEN_BROWSER: "1"
+    restart: unless-stopped

@@ -18,6 +18,44 @@ export function resolveListenHost(choice) {
   return "127.0.0.1";
 }
 
+export function resolveListenHostFromEnv(value) {
+  const normalized = String(value ?? "").trim();
+
+  if (!normalized) {
+    return null;
+  }
+
+  if (normalized === "127.0.0.1" || normalized === "localhost") {
+    return "127.0.0.1";
+  }
+
+  if (normalized === "2" || normalized === "0.0.0.0") {
+    return "0.0.0.0";
+  }
+
+  return null;
+}
+
+export function getConfiguredPort(value, fallbackPort) {
+  const normalized = String(value ?? "").trim();
+
+  if (!normalized) {
+    return fallbackPort;
+  }
+
+  const parsed = Number(normalized);
+  if (!Number.isInteger(parsed) || parsed < 1 || parsed > 65535) {
+    return fallbackPort;
+  }
+
+  return parsed;
+}
+
+export function shouldOpenBrowser(value) {
+  const normalized = String(value ?? "").trim().toLowerCase();
+  return normalized !== "1" && normalized !== "true";
+}
+
 export function getLanAddresses() {
   const addresses = [];
   const interfaces = os.networkInterfaces();
@@ -47,6 +85,11 @@ export function formatAccessUrls({ host, port, token, lanAddresses = [] }) {
 }
 
 export async function askListenHost() {
+  const configuredHost = resolveListenHostFromEnv(process.env.LISTEN_HOST);
+  if (configuredHost) {
+    return configuredHost;
+  }
+
   if (!process.stdin.isTTY) {
     return "127.0.0.1";
   }
