@@ -1,0 +1,9 @@
+node_modules/
+dist/
+data/
+
+server-run.out.log
+server-run.err.log
+
+.DS_Store
+Thumbs.db
