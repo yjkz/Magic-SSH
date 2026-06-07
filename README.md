@@ -12,6 +12,16 @@
 - 启动时选择监听 `127.0.0.1` 或 `0.0.0.0`
 - 本地数据保存在程序目录下的 `data/`
 
+## 界面预览
+
+连接管理：
+
+![连接管理](assets/screenshots/connections.png)
+
+终端界面：
+
+![终端界面](assets/screenshots/terminal.png)
+
 ## 技术栈
 
 - Node.js
@@ -64,6 +74,60 @@ npm test
 
 ```bash
 npm run build
+```
+
+## Docker 本地构建
+
+项目已包含 `Dockerfile` 和 `docker-compose.yml`，可以直接在项目根目录构建并启动。
+
+使用 Dockerfile 构建镜像：
+
+```bash
+docker build -t magic-ssh:local .
+```
+
+使用 Docker Compose 构建并后台启动：
+
+```bash
+docker compose up -d --build
+```
+
+查看启动日志，获取带 token 的访问链接：
+
+```bash
+docker logs magic-ssh
+```
+
+默认端口映射为：
+
+```text
+宿主机 8766 -> 容器 8766
+```
+
+浏览器打开日志中输出的链接即可访问。
+
+停止服务：
+
+```bash
+docker compose down
+```
+
+## Docker 数据持久化
+
+`docker-compose.yml` 默认将项目目录下的 `data/` 挂载到容器内：
+
+```text
+./data:/app/data
+```
+
+保存的连接信息、加密凭据等数据会保留在本地 `data/` 目录中。该目录已被 `.gitignore` 和 `.dockerignore` 忽略，不会提交到 Git，也不会进入镜像构建上下文。
+
+容器运行时默认环境变量：
+
+```text
+LISTEN_HOST=0.0.0.0
+PORT=8766
+DISABLE_OPEN_BROWSER=1
 ```
 
 ## 说明
